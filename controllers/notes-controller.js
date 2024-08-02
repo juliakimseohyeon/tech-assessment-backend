@@ -1,13 +1,31 @@
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 
 const notes = JSON.parse(fs.readFileSync("./data/notes.json"));
 
 // Get all notes
 const getAllNotes = async (_req, res) => {
   try {
-    res.status(204).send(notes);
+    res.send(notes);
   } catch (err) {
     console.log(err);
+  }
+};
+
+// Add one note
+const addOneNote = async (req, res) => {
+  const newNote = {
+    id: uuidv4(),
+    note: req.body.note,
+    collaborator: "",
+    timestamp: Date.now(),
+  };
+  try {
+    notes.push(newNote);
+    fs.writeFileSync("./data/notes.json", JSON.stringify(notes));
+    res.send(notes);
+  } catch (err) {
+    console.error(err);
   }
 };
 
@@ -17,7 +35,7 @@ const deleteOneNote = async (req, res) => {
     const updatedNotes = notes.filter((note) => note.id !== req.params.id);
     console.log("updated notes: ", updatedNotes);
     fs.writeFileSync("./data/notes.json", JSON.stringify(updatedNotes)); // Write the updated array back to the JSON file
-    res.status(204).send(notes);
+    res.send(notes);
   } catch (err) {
     console.error(err);
   }
@@ -25,5 +43,6 @@ const deleteOneNote = async (req, res) => {
 
 module.exports = {
   getAllNotes,
+  addOneNote,
   deleteOneNote,
 };
