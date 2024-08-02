@@ -12,6 +12,28 @@ const getAllNotes = async (_req, res) => {
   }
 };
 
+// Get specific notes
+const getSpecificNotes = async (req, res) => {
+  const query = req.query.query;
+  console.log("request: ", req);
+  console.log("query is: ", query);
+  try {
+    if (query) {
+      const lowerCaseQuery = query.toLowerCase();
+      const response = notes.filter((note) =>
+        note.note.toLowerCase().includes(lowerCaseQuery)
+      ); // Make query case insensitive
+      console.log("Response is:", response);
+      res.send(response);
+    } else {
+      res.send(notes); // Send back all notes if query is not provided
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server error");
+  }
+};
+
 // Add one note
 const addOneNote = async (req, res) => {
   const newNote = {
@@ -43,6 +65,7 @@ const deleteOneNote = async (req, res) => {
 
 module.exports = {
   getAllNotes,
+  getSpecificNotes,
   addOneNote,
   deleteOneNote,
 };
