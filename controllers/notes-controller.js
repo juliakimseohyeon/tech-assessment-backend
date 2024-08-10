@@ -39,7 +39,7 @@ const addOneNote = async (req, res) => {
   const newNote = {
     id: uuidv4(),
     note: req.body.note,
-    collaborator: "",
+    collaborator: req.body.collaborator,
     timestamp: Date.now(),
   };
   try {

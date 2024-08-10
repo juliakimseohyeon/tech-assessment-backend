@@ -3,7 +3,6 @@ const notesController = require("../controllers/notes-controller");
 
 router
   .route("/")
-  // .get(notesController.getAllNotes)
   .get(notesController.getSpecificNotes)
   .post(notesController.addOneNote);
 
