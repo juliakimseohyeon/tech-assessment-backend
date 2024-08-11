@@ -57,7 +57,7 @@ const deleteOneNote = async (req, res) => {
     const updatedNotes = notes.filter((note) => note.id !== req.params.id);
     console.log("updated notes: ", updatedNotes);
     fs.writeFileSync("./data/notes.json", JSON.stringify(updatedNotes)); // Write the updated array back to the JSON file
-    res.send(notes);
+    res.send(updatedNotes);
   } catch (err) {
     console.error(err);
   }
