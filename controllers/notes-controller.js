@@ -39,7 +39,7 @@ const addOneNote = async (req, res) => {
   const newNote = {
     id: uuidv4(),
     note: req.body.note,
-    collaborator: "",
+    collaborator: req.body.collaborator,
     timestamp: Date.now(),
   };
   try {
@@ -57,6 +57,22 @@ const deleteOneNote = async (req, res) => {
     const updatedNotes = notes.filter((note) => note.id !== req.params.id);
     console.log("updated notes: ", updatedNotes);
     fs.writeFileSync("./data/notes.json", JSON.stringify(updatedNotes)); // Write the updated array back to the JSON file
+    res.send(updatedNotes);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+// Update one note
+const updateOneNote = async (req, res) => {
+  try {
+    const foundNote = notes.find((note) => note.id === req.params.id);
+    console.log("Found Note: ", foundNote);
+    const updatedNote = { ...foundNote, pinned: req.body.pinned };
+    console.log("Updated Note: ", updatedNote);
+    console.log("Index of the found note: ", notes.indexOf(foundNote));
+    notes[notes.indexOf(foundNote)] = updatedNote;
+    fs.writeFileSync("./data/notes.json", JSON.stringify(notes, null, 2));
     res.send(notes);
   } catch (err) {
     console.error(err);
@@ -68,4 +84,5 @@ module.exports = {
   getSpecificNotes,
   addOneNote,
   deleteOneNote,
+  updateOneNote,
 };
